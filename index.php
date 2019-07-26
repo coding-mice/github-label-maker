@@ -125,6 +125,15 @@ while($repos = getOrgRepos($page)) {
             createLabel($repo->url . '/labels', $array);
         }
 
+        if (!in_array('Low Priority', $repoLabels[$repo->name]['labels'])) {
+            $array = [
+                'name' => 'Low Priority',
+                'description' => '',
+                'color' => 'b9def0'
+            ];
+            createLabel($repo->url . '/labels', $array);
+        }
+
         if (!in_array('Estimate Done', $repoLabels[$repo->name]['labels'])) {
             $array = [
                 'name' => 'Estimate Done',
