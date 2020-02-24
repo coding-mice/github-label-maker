@@ -2,7 +2,7 @@
 /**
  * This script fixes github project labels
  * Updates the existing (invalid,question)
- * Adds normal flow labels like Test On Dev
+ * Adds normal flow labels
  */
 
 require 'config.php';
@@ -197,9 +197,45 @@ while($repos = getOrgRepos($page)) {
             createLabel($repo->url . '/labels', $array);
         }
 
-        if (!in_array('Code Review Needed', $repoLabels[$repo->name]['labels'])) {
+        if (!in_array('CR Needed', $repoLabels[$repo->name]['labels'])) {
             $array = [
-                'name' => 'Code Review Needed',
+                'name' => 'CR Needed',
+                'description' => '',
+                'color' => 'e6e6e6'
+            ];
+            createLabel($repo->url . '/labels', $array);
+        }
+
+        if (in_array('Code Review Needed', $repoLabels[$repo->name]['labels'])) {
+            $array = [
+                'name' => 'CR Needed',
+                'description' => '',
+                'color' => 'e6e6e6'
+            ];
+            updateLabel($repo->url . '/labels/'.urlencode('Code Review Needed'), $array);
+        }
+
+        if (!in_array('CR Done', $repoLabels[$repo->name]['labels'])) {
+            $array = [
+                'name' => 'CR Done',
+                'description' => '',
+                'color' => 'e6e6e6'
+            ];
+            createLabel($repo->url . '/labels', $array);
+        }
+
+        if (!in_array('Test Needed', $repoLabels[$repo->name]['labels'])) {
+            $array = [
+                'name' => 'Test Needed',
+                'description' => '',
+                'color' => 'e6e6e6'
+            ];
+            createLabel($repo->url . '/labels', $array);
+        }
+
+        if (!in_array('Test Created', $repoLabels[$repo->name]['labels'])) {
+            $array = [
+                'name' => 'Test Created',
                 'description' => '',
                 'color' => 'e6e6e6'
             ];
