@@ -7,7 +7,7 @@
 
 require 'config.php';
 
-function callGithubUrl($url,$method='GET'){
+function callGithubUrl($url){
     $headers = getHeaders();
 
     $url = str_replace('https://api.github.com','',$url);
@@ -34,8 +34,7 @@ function createLabel($url,$array){
     curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-    $response = curl_exec($curl);
-    //var_dump($response);
+    curl_exec($curl);
     curl_close($curl);
 }
 
@@ -51,8 +50,7 @@ function updateLabel($url,$array){
     curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PATCH');
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-    $response = curl_exec($curl);
-    //var_dump($response);
+    curl_exec($curl);
     curl_close($curl);
 }
 
@@ -65,8 +63,7 @@ function deleteLabel($url){
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-    $response = curl_exec($curl);
-    //var_dump($response);
+    curl_exec($curl);
     curl_close($curl);
 }
 
@@ -75,6 +72,8 @@ function getOrgRepos($page)
     global $orgName;
     return callGithubUrl('/orgs/'.$orgName.'/repos?page='.$page);
 }
+
+$repoLabels = [];
 
 $desiredLabelColors = [
     'bug' => '#d73a4a',
@@ -110,8 +109,6 @@ while($repos = getOrgRepos($page)) {
                 'color' => 'e6e6e6'
             ];
             updateLabel($repo->url . '/labels/invalid', $array);
-        } else {
-            //var_dump('no invalid label');
         }
 
         if (in_array('question', $repoLabels[$repo->name]['labels'])) {
@@ -121,9 +118,6 @@ while($repos = getOrgRepos($page)) {
                 'color' => 'e6e6e6'
             ];
             updateLabel($repo->url . '/labels/question', $array);
-        } else {
-            //var_dump('no question label in '. $repo->name);
-            //var_dump($repoLabels[$repo->name]['labels']);
         }
 
         if (!in_array('Estimate Required', $repoLabels[$repo->name]['labels'])) {
