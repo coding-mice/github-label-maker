@@ -56,6 +56,20 @@ function updateLabel($url,$array){
     curl_close($curl);
 }
 
+function deleteLabel($url){
+
+    $headers = getHeaders();
+
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
+    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+    $response = curl_exec($curl);
+    //var_dump($response);
+    curl_close($curl);
+}
+
 function getOrgRepos($page)
 {
     global $orgName;
@@ -77,6 +91,11 @@ $page = 1;
 while($repos = getOrgRepos($page)) {
 
     foreach ($repos as $repo) {
+
+        if($repo->archived){
+            continue;
+        }
+
         $labels = callGithubUrl($repo->url . '/labels');
         foreach ($labels as $label) {
             if (!in_array($label->name, ['bug', 'enhancement', 'wontfix', 'good first issue', 'duplicate', 'help wanted'])) {
@@ -207,12 +226,7 @@ while($repos = getOrgRepos($page)) {
         }
 
         if (in_array('Code Review Needed', $repoLabels[$repo->name]['labels'])) {
-            $array = [
-                'name' => 'CR Needed',
-                'description' => '',
-                'color' => 'e6e6e6'
-            ];
-            updateLabel($repo->url . '/labels/'.urlencode('Code Review Needed'), $array);
+            deleteLabel($repo->url . '/labels/'.urlencode('Code Review Needed'));
         }
 
         if (!in_array('CR Done', $repoLabels[$repo->name]['labels'])) {
@@ -242,7 +256,16 @@ while($repos = getOrgRepos($page)) {
             createLabel($repo->url . '/labels', $array);
         }
 
-        var_dump('done creating labels for ' . $repo->name);
+        if (!in_array('regression', $repoLabels[$repo->name]['labels'])) {
+            $array = [
+                'name' => 'regression',
+                'description' => '',
+                'color' => 'ff0000'
+            ];
+            createLabel($repo->url . '/labels', $array);
+        }
+
+        echo PHP_EOL.'Done creating labels for ' . $repo->name;
     }
     $page++;
 }
