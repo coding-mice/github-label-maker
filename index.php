@@ -19,7 +19,14 @@ function callGithubUrl($url){
 
     $server_output = curl_exec($ch);
     curl_close($ch);
-    return json_decode($server_output);
+
+    $output = json_decode($server_output);
+
+    if(is_object($output) && property_exists($output,'message') && $output->message==="Bad credentials"){
+      throw new \Exception($output->message);
+    }
+
+    return $output;
 }
 
 function createLabel($url,$array){
