@@ -36,11 +36,14 @@ function createLabel($url,$array){
     $headers = getHeaders();
 
     $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'POST');
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt_array($curl, [
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => 1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => $data,
+        CURLOPT_HTTPHEADER => $headers
+    ]);
+
     curl_exec($curl);
     curl_close($curl);
 }
@@ -52,11 +55,13 @@ function updateLabel($url,$array){
     $headers = getHeaders();
 
     $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PATCH');
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt_array($curl, [
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => 1,
+        CURLOPT_CUSTOMREQUEST => 'PATCH',
+        CURLOPT_POSTFIELDS => $data,
+        CURLOPT_HTTPHEADER => $headers
+    ]);
     curl_exec($curl);
     curl_close($curl);
 }
@@ -66,10 +71,12 @@ function deleteLabel($url){
     $headers = getHeaders();
 
     $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt_array($curl, [
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => 1,
+        CURLOPT_CUSTOMREQUEST => 'DELETE',
+        CURLOPT_HTTPHEADER => $headers
+    ]);
     curl_exec($curl);
     curl_close($curl);
 }
